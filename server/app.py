@@ -38,7 +38,7 @@ def upload_file():
             return jsonify({'error': 'Unsupported file format'}), 400
 
     # Save the uploaded file to the upload folder
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file[i].filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)
     
         results = model.predict(file_path)
