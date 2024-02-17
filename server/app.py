@@ -27,7 +27,7 @@ def upload_file():
     file= request.files.getlist('file')
     no_img=len(file)
     avg_confi=0
-
+    lab_prev=""
     for i in range(0,no_img):
         if file[i].filename == '':
             return jsonify({'error': 'No selected file'}), 400
@@ -46,6 +46,7 @@ def upload_file():
         cls_np = boxes.cls.cpu().numpy().astype(int)
         conf_np = boxes.conf.cpu().numpy()
         prediction = None
+        
         if len(cls_np)>0:
             label = cls_np[0]
             confidence = conf_np[0]
@@ -53,6 +54,13 @@ def upload_file():
             prediction = {
             'name':model.names[label]
             }
+        if lab_prev=="":
+            lab_prev=model.names[label]
+            continue
+        if lab_prev != model.names[label]:
+            prediction['confidence']=0
+            break
+        lab_prev=model.names[label]
     prediction['confidence']=avg_confi/no_img
     print(prediction)
 
