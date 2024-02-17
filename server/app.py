@@ -24,21 +24,21 @@ def upload_file():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part in the request'}), 400
 
-    file= request.files.getlist('file')
-    no_img=len(file)
+    files= request.files.getlist('file')
+    no_img=len(files)
     avg_confi=0
 
-    for i in range(0,no_img):
-        if file[i].filename == '':
+    for file in files:
+        if file.filename == '':
             return jsonify({'error': 'No selected file'}), 400
     # Check if the file is allowed based on its extension
         allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
-        if '.' not in file[i].filename or file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
+        if '.' not in file.filename or file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
             return jsonify({'error': 'Unsupported file format'}), 400
 
     # Save the uploaded file to the upload folder
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file[i].filename)
-        file[i].save(file_path)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(file_path)
     
         results = model.predict(file_path)
         result = results[0]
