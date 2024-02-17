@@ -12,11 +12,11 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 # Set the maximum file size (in bytes) - 5MB in this example
-app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
 # Configure the upload folder
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+    
 # Define a route to receive POST requests with image file uploads
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
