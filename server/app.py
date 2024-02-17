@@ -25,17 +25,12 @@ def upload_file():
         return jsonify({'error': 'No file part in the request'}), 400
 
     files= request.files.getlist('file')
-    no_img=len(files)
+    no_img=len(file)
     avg_confi=0
-<<<<<<< HEAD
     lab_prev=""
-    for i in range(0,no_img):
-        if file[i].filename == '':
-=======
-
+    check_flag=False
     for file in files:
         if file.filename == '':
->>>>>>> 11e46274618b27ba5007dc135ece159b9a7a5c14
             return jsonify({'error': 'No selected file'}), 400
     # Check if the file is allowed based on its extension
         allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
@@ -43,7 +38,7 @@ def upload_file():
             return jsonify({'error': 'Unsupported file format'}), 400
 
     # Save the uploaded file to the upload folder
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file[i].filename)
         file.save(file_path)
     
         results = model.predict(file_path)
@@ -64,10 +59,13 @@ def upload_file():
             lab_prev=model.names[label]
             continue
         if lab_prev != model.names[label]:
-            prediction['confidence']=0
+            check_flag=True
             break
         lab_prev=model.names[label]
-    prediction['confidence']=avg_confi/no_img
+    if check_flag==True:
+         prediction['confidence']=0
+    else:
+        prediction['confidence']=avg_confi/no_img
     print(prediction)
 
     return jsonify({'message': 'File uploaded successfully', 'file_path': file_path, 'prediction':prediction}), 200
