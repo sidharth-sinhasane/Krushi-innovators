@@ -6,18 +6,17 @@ model = YOLO('best.pt')
 
 app = Flask(__name__)
 
-# Specify the upload folder
+
 UPLOAD_FOLDER = './uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# Set the maximum file size (in bytes) - 5MB in this example
+#size is in byets
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
-# Configure the upload folder
+#Configure 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    
-# Define a route to receive POST requests with image file uploads
+
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     # Check if the POST request contains a file
@@ -67,12 +66,7 @@ def upload_file():
     else:
         prediction['confidence']=avg_confi/no_img
     print(prediction)
-
     return jsonify({'message': 'File uploaded successfully', 'file_path': file_path, 'prediction':prediction}), 200
-
-@app.route('/',methods=['GET'])
-def welcome():
-    return jsonify({'msg':'Hello World'})
 
 if __name__ == '__main__':
     app.run()
